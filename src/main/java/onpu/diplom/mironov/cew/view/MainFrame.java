@@ -17,36 +17,49 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
+import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableModel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeSelectionModel;
+import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
 
 public class MainFrame extends JFrame {
-    private JMenuBar menuBar;
-    private JToolBar toolBar;
-    private JLabel statusLabel;
-    private JTable mainTable;
+    private final JMenuBar menuBar;
+    private final JToolBar toolBar;
+    private final JLabel statusLabel;
+    private final JTable mainTable;
+    private final JTree roomsTree;
 
     public MainFrame()  throws HeadlessException {
         menuBar = new JMenuBar();
         toolBar = new JToolBar();
         statusLabel = new JLabel("");
         mainTable = new JTable();
+        roomsTree = new JTree(new DefaultMutableTreeNode());
         toolBar.setOrientation(JToolBar.HORIZONTAL);
         toolBar.setFloatable(false);
 
         JPanel statusPanel = new JPanel(new BorderLayout());
         statusPanel.add(statusLabel, BorderLayout.WEST);
         statusPanel.add(new ResizeCornerPanel(20), BorderLayout.EAST);
+        
+        JSplitPane mainSplitPane = new JSplitPane(HORIZONTAL_SPLIT,  
+                roomsTree,
+                new JScrollPane(mainTable));
+        mainSplitPane.setDividerLocation(.25);
 
         setLayout(new BorderLayout());
         Container contentPane = getContentPane();
         contentPane.add(toolBar, BorderLayout.PAGE_START);
         contentPane.add(statusPanel, BorderLayout.PAGE_END);
-        contentPane.add(new JScrollPane(mainTable), BorderLayout.CENTER);
+        contentPane.add(mainSplitPane, BorderLayout.CENTER);
         setJMenuBar(menuBar);
     }
  
@@ -55,11 +68,19 @@ public class MainFrame extends JFrame {
             Map<String, List<? extends AbstractAction>> menuActions,
             final AbstractAction exitAction,
             TableModel dataModel,
-            ListSelectionListener mainTalbeSelectionListener) {
+            ListSelectionListener mainTalbeSelectionListener,
+            TreeCellRenderer roomsTreeCellRenderer) {
+
         mainTable.setModel(dataModel);
         ListSelectionModel tableSelectionModel = mainTable.getSelectionModel();
         tableSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableSelectionModel.addListSelectionListener(mainTalbeSelectionListener);
+
+        roomsTree.setCellRenderer(roomsTreeCellRenderer);
+        roomsTree.expandRow(0);
+        TreeSelectionModel roomsTreeSelectionModel = roomsTree.getSelectionModel();
+        roomsTreeSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
         for (AbstractAction action : toolBarActions) {
             if (action != null && action.isEnabled()) {
                 JButton btn = new JButton(action);
@@ -68,6 +89,7 @@ public class MainFrame extends JFrame {
                 toolBar.add(btn);
             }
         }
+
         for(Map.Entry<String, List<? extends AbstractAction>> entry : menuActions.entrySet()) {
             JMenu menu = menuBar.add(new JMenu(entry.getKey()));
             for (AbstractAction action : entry.getValue()) {
@@ -92,6 +114,10 @@ public class MainFrame extends JFrame {
 
     public JTable getMainTable() {
         return mainTable;
+    }
+
+    public JTree getRoomsTree() {
+        return roomsTree;
     }
 
     public JLabel getStatusLabel() {

@@ -20,7 +20,7 @@ public class DeviceTypeJdbiDao extends AbstractJdbiDao<DeviceType> implements De
     public static final String IMAGE_URL = "image_url";
 
     public DeviceTypeJdbiDao(DBI dbi) {
-        super(dbi, DeviceTypeJdbiDaoResource.class);
+        super(dbi, DeviceType.class, DeviceTypeJdbiDaoResource.class);
     }
 
     @Override
@@ -33,11 +33,6 @@ public class DeviceTypeJdbiDao extends AbstractJdbiDao<DeviceType> implements De
         }
     }
 
-    @Override
-    public Class<DeviceType> getBeanClass() {
-        return DeviceType.class;
-    }
-
     @RegisterMapper(DeviceTypeJdbiMapper.class)
     public static interface DeviceTypeJdbiDaoResource extends SqlObjectType<DeviceType> {
 
@@ -45,7 +40,7 @@ public class DeviceTypeJdbiDao extends AbstractJdbiDao<DeviceType> implements De
                 + ID + ", " + TITLE + ", " + IMAGE_URL
                 + ") VALUES ("
                 + ":" + ID + ", :" + TITLE + ", :" + IMAGE_URL + ")")
-        int insert(@Bind(ID) long id, @Bind(TITLE) String name, @Bind(IMAGE_URL) String imageUrl);
+        int insert(@Bind(ID) long id, @Bind(TITLE) String title, @Bind(IMAGE_URL) String imageUrl);
 
         @Override
         @SqlUpdate("DELETE FROM " + DEVICE_TYPE + " WHERE " + ID + " = :" + ID)

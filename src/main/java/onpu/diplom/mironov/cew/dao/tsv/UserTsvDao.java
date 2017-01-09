@@ -12,7 +12,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class UserTsvDao extends AbstractTsvDao<User> implements UserDao {
 
     public UserTsvDao(File file) {
-        super(file);
+        super(file, User.class);
     }
 
     @Override
@@ -26,11 +26,6 @@ public class UserTsvDao extends AbstractTsvDao<User> implements UserDao {
     @Override
     protected String[] getHeader() {
         return new String[]{"id", "name", "password", "privilege"};
-    }
-
-    @Override
-    public Class<User> getBeanClass() {
-        return User.class;
     }
 
 }

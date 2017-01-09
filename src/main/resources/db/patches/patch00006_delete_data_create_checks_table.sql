@@ -1,0 +1,22 @@
+DELETE FROM device;
+DELETE FROM room;
+
+ALTER TABLE building ADD UNIQUE (name);
+ALTER TABLE building ADD CHECK (name IS NOT NULL AND LENGTH(name) > 2);
+
+ALTER TABLE device_type ADD UNIQUE (title);
+ALTER TABLE device_type ADD CHECK (title IS NOT NULL AND LENGTH(title) > 2);
+
+ALTER TABLE user ADD UNIQUE (name);
+ALTER TABLE user ADD CHECK (name IS NOT NULL AND LENGTH(name) > 2);
+ALTER TABLE user ADD CHECK (password IS NOT NULL AND LENGTH(password) > 2);
+
+ALTER TABLE room ADD UNIQUE (number);
+ALTER TABLE room ADD CHECK (title IS NOT NULL AND LENGTH(title) > 2);
+ALTER TABLE room ADD CHECK (user_id IS NOT NULL);
+ALTER TABLE room ADD CHECK (building_id IS NOT NULL);
+
+ALTER TABLE device ADD UNIQUE (hash);
+ALTER TABLE device ADD CHECK (hash IS NOT NULL AND LENGTH(hash) > 2);
+ALTER TABLE device ADD CHECK (room_id IS NOT NULL);
+ALTER TABLE device ADD CHECK (device_type_id IS NOT NULL);

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import onpu.diplom.mironov.cew.CewUtil;
+import onpu.diplom.mironov.cew.bean.Building;
 import onpu.diplom.mironov.cew.bean.Room;
 import onpu.diplom.mironov.cew.bean.User;
 import onpu.diplom.mironov.cew.dao.RoomDao;
@@ -18,7 +19,7 @@ public class RoomTsvDao extends AbstractTsvDao<Room> implements RoomDao {
     private final UserDao userDao;
 
     public RoomTsvDao(File file, UserDao userDao) {
-        super(file);
+        super(file, Room.class);
         this.userDao = userDao;
     }
 
@@ -50,11 +51,15 @@ public class RoomTsvDao extends AbstractTsvDao<Room> implements RoomDao {
     }
 
     @Override
-    public List<Room> findByUser(User user) {
+    public List<Room> findByUserAndBuilding(User user, Building building) {
         List<Room> rooms = list();
         if (user != null) {
             for (Iterator<Room> iterator = rooms.iterator(); iterator.hasNext();) {
-                if(iterator.next().getUserId() != user.getId()) {
+                Room room = iterator.next();
+                if(room.getUserId() != user.getId()) {
+                    iterator.remove();
+                }
+                if (building != null && room.getBuildingId() != building.getId()) {
                     iterator.remove();
                 }
             }
@@ -64,12 +69,7 @@ public class RoomTsvDao extends AbstractTsvDao<Room> implements RoomDao {
 
     @Override
     protected String[] getHeader() {
-        return new String[]{"id", "number", "title", "userId"};
-    }
-
-    @Override
-    public Class<Room> getBeanClass() {
-        return Room.class;
+        return new String[]{"id", "number", "title", "userId", "buildingId"};
     }
 
     public void initUsersFields(User u, Room room) {

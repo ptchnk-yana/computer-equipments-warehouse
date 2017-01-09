@@ -69,7 +69,7 @@ public class DeleteAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         if (!selectionListener.isCurrentUserPrivilegedToDeleteCurrentSelection()) {
             showErrorMessage(getText("delete.norights"), getText("delete.title"));
             return;

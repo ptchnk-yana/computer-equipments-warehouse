@@ -42,4 +42,11 @@ public class CewUtil {
         }
         return map;
     }
+
+    public static <T> T checkNotNull(T t, String name) {
+        if (t == null) {
+            throw new NullPointerException(name + " cannot be null");
+        }
+        return t;
+    }
 }

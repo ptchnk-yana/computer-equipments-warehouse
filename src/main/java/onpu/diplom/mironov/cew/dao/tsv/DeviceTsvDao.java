@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import onpu.diplom.mironov.cew.CewUtil;
+import onpu.diplom.mironov.cew.bean.Building;
 import onpu.diplom.mironov.cew.bean.Device;
 import onpu.diplom.mironov.cew.bean.DeviceType;
 import onpu.diplom.mironov.cew.bean.Room;
@@ -22,7 +23,7 @@ public class DeviceTsvDao extends AbstractTsvDao<Device> implements DeviceDao {
     private final RoomDao roomDao;
 
     public DeviceTsvDao(File file, DeviceTypeDao deviceTypeDao, RoomDao roomDao) {
-        super(file);
+        super(file, Device.class);
         this.deviceTypeDao = deviceTypeDao;
         this.roomDao = roomDao;
     }
@@ -50,13 +51,14 @@ public class DeviceTsvDao extends AbstractTsvDao<Device> implements DeviceDao {
     }
 
     @Override
-    public List<Device> findByTypeAndUserAndRoom(DeviceType deviceType, User user, Room room) {
+    public List<Device> findByTypeAndUserAndRoomAndBuilding(DeviceType deviceType, 
+            User user, Room room, Building building) {
         Map<Long, DeviceType> deviceTypes = CewUtil.toMap(deviceType != null 
                 ? Collections.singletonList(deviceType) 
                 : deviceTypeDao.list());
         Map<Long, Room> rooms = CewUtil.toMap(room != null 
                 ? Collections.singletonList(room) 
-                : roomDao.findByUser(user));
+                : roomDao.findByUserAndBuilding(user, building));
         
         List<Device> devices = list();
         for (Iterator<Device> deviceIterator = devices.iterator(); deviceIterator.hasNext();) {
@@ -85,11 +87,6 @@ public class DeviceTsvDao extends AbstractTsvDao<Device> implements DeviceDao {
     @Override
     protected String[] getHeader() {
         return new String[]{"id", "deviceTypeId", "roomId", "hash", "description"};
-    }
-
-    @Override
-    public Class<Device> getBeanClass() {
-        return Device.class;
     }
 
     public void initTypeAndRoomFields(Device device, DeviceType dt, Room r) {

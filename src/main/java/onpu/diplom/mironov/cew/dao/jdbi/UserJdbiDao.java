@@ -22,7 +22,7 @@ public class UserJdbiDao extends AbstractJdbiDao<User> implements UserDao {
     public static final String PRIVILEGE = "privilege";
 
     public UserJdbiDao(DBI dbi) {
-        super(dbi, UserJdbiDaoResource.class);
+        super(dbi, User.class, UserJdbiDaoResource.class);
     }
 
     @Override
@@ -39,11 +39,6 @@ public class UserJdbiDao extends AbstractJdbiDao<User> implements UserDao {
                 close(connection);
             }
         }
-    }
-
-    @Override
-    public Class<User> getBeanClass() {
-        return User.class;
     }
 
     @RegisterMapper(UserJdbiMapper.class)

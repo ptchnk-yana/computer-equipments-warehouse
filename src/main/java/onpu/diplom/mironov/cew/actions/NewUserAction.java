@@ -26,7 +26,7 @@ public class NewUserAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         List<User> userList = userDao.list();
         User user = createUser(userList);
         if(user != null) {

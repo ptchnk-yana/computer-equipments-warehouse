@@ -11,7 +11,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 public class DeviceTypeTsvDao extends AbstractTsvDao<DeviceType> implements DeviceTypeDao{
 
     public DeviceTypeTsvDao(File file) {
-        super(file);
+        super(file, DeviceType.class);
     }
 
     @Override
@@ -24,11 +24,6 @@ public class DeviceTypeTsvDao extends AbstractTsvDao<DeviceType> implements Devi
     @Override
     protected String[] getHeader() {
         return new String[]{"id", "title", "imageUrl"};
-    }
-
-    @Override
-    public Class<DeviceType> getBeanClass() {
-        return DeviceType.class;
     }
 
 }

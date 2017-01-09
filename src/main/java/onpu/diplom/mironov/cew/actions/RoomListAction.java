@@ -29,7 +29,7 @@ public class RoomListAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         actionPerformedImpl(true);
     }
 
@@ -59,29 +59,7 @@ public class RoomListAction extends AbstractCewAction {
             user = currentUser;
         }
 
-        list.addAll(roomDao.findByUser(user));
-//        if (user != null) {
-//            for (Iterator<Room> iterator = list.iterator(); iterator.hasNext();) {
-//                Room room = iterator.next();
-//                if (room.getUserId() != user.getId()) {
-//                    iterator.remove();
-//                } else {
-//                    room.setUserName(user.getName());
-//                    room.setUserPrivilege(user.getPrivilege());
-//                }
-//            }
-//        } else {
-//            Map<Long, User> userMap = CewUtil.toMap(((UserListAction) super.actions.get(
-//                    ActionEnum.USER_LIST)).userList());
-//            for (Room room : list) {
-//                User actualUser = userMap.get(room.getUserId());
-//                if (actualUser != null) {
-//                    room.setUserName(actualUser.getName());
-//                    room.setUserPrivilege(actualUser.getPrivilege());
-//                }
-//            }
-//        }
-
+        list.addAll(roomDao.findByUserAndBuilding(user, getSelectedBuilding()));
         return user;
     }
     

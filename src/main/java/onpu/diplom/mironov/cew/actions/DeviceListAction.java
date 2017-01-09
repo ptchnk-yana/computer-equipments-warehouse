@@ -2,14 +2,10 @@ package onpu.diplom.mironov.cew.actions;
 
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import javax.swing.JOptionPane;
-import onpu.diplom.mironov.cew.CewUtil;
 import onpu.diplom.mironov.cew.bean.Device;
 import onpu.diplom.mironov.cew.bean.DeviceType;
 import onpu.diplom.mironov.cew.bean.Room;
@@ -36,7 +32,7 @@ public class DeviceListAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         actionPerformedImpl(view.getMainTable().getSelectedRow(), true);
     }
 
@@ -77,56 +73,11 @@ public class DeviceListAction extends AbstractCewAction {
                         JOptionPane.INFORMATION_MESSAGE);
             }
         }
-//        Set<Long> roomIds = getApplicableRoomIds(user, room);
-//        List<Device> listDevices = getApplicableDevices(deviceType, roomIds);
-        List<Device> listDevices = deviceDao.findByTypeAndUserAndRoom(deviceType, user, room);
+        List<Device> listDevices = deviceDao.findByTypeAndUserAndRoomAndBuilding(
+                deviceType, user, room, getSelectedBuilding());
         view.getStatusLabel().setText(status);
         actions.get(ActionEnum.DELETE).setEnabled(false);
         tableModel.init(listDevices);
     }
-
-    public List<Device> listDevices() {
-        return deviceDao.list();
-    }
-
-//    private Set<Long> getApplicableRoomIds(User user, Room room) {
-//        Set<Long> listRoomIds = new HashSet<Long>();
-//        List<Room> listRoms = ((RoomListAction) actions.get(ActionEnum.ROOM_LIST)).listRoms();
-//        for (Room actualRoom : listRoms) {
-//            if ((user == null || user.getId() == actualRoom.getUserId())
-//                    && (room == null || room.getId() == actualRoom.getId())) {
-//                listRoomIds.add(actualRoom.getId());
-//            }
-//        }
-//        return listRoomIds;
-//    }
-//
-//    private List<Device> getApplicableDevices(DeviceType deviceType, Set<Long> roomIds) {
-//        List<Device> listDevices = listDevices();
-//        Map<Long, DeviceType> deviceTypes = CewUtil.toMap(((DeviceTypeListAction) 
-//                super.actions.get(ActionEnum.DEVICE_TYPE_LIST)).listDeviceTypes());
-//        Map<Long, Room> rooms = CewUtil.toMap(((RoomListAction) 
-//                super.actions.get(ActionEnum.ROOM_LIST)).listRoms());
-//
-//        for (Iterator<Device> it = listDevices.iterator(); it.hasNext();) {
-//            Device iteratedValue = it.next();
-//            if (deviceType != null && deviceType.getId() != iteratedValue.getDeviceTypeId()) {
-//                it.remove();
-//            } else if (!roomIds.contains(iteratedValue.getRoomId())) {
-//                it.remove();
-//            } else {
-//                DeviceType actualDeviceType = deviceTypes.get(iteratedValue.getDeviceTypeId());
-//                if (actualDeviceType != null) {
-//                    iteratedValue.setDeviceImageUrl(actualDeviceType.getImageUrl());
-//                    iteratedValue.setDeviceTitle(actualDeviceType.getTitle());
-//                }
-//                Room actualRoom = rooms.get(iteratedValue.getRoomId());
-//                if (actualRoom != null) {
-//                    iteratedValue.setRoomNumber(actualRoom.getNumber());
-//                }
-//            }
-//        }
-//        return listDevices;
-//    }
 
 }

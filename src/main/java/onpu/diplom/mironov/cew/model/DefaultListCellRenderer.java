@@ -7,9 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-public class CewCellRenderer<T> extends JLabel implements ListCellRenderer<T> {
+public class DefaultListCellRenderer<T> extends JLabel implements ListCellRenderer<T> {
 
-    public CewCellRenderer() {
+    public DefaultListCellRenderer() {
         setOpaque(true);
     }
 

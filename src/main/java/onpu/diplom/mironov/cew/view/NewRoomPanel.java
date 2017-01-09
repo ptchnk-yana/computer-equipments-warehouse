@@ -1,7 +1,7 @@
 package onpu.diplom.mironov.cew.view;
 
 import onpu.diplom.mironov.cew.bean.User;
-import onpu.diplom.mironov.cew.model.CewCellRenderer;
+import onpu.diplom.mironov.cew.model.DefaultListCellRenderer;
 
 public class NewRoomPanel extends javax.swing.JPanel {
     private User[] users;
@@ -13,7 +13,7 @@ public class NewRoomPanel extends javax.swing.JPanel {
     public NewRoomPanel(User[] users) {
         this.users = users;
         initComponents();
-        userComboBox.setRenderer(new CewCellRenderer<User>(){
+        userComboBox.setRenderer(new DefaultListCellRenderer<User>(){
             @Override
             protected String getText(User value) {
                 return value.getName();

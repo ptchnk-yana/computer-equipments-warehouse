@@ -28,7 +28,7 @@ public class SaveAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) throws IOException {
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("TSV File", "tsv");
         chooser.setFileFilter(filter);
@@ -49,15 +49,9 @@ public class SaveAction extends AbstractCewAction {
                     }
                     mapWriter.write(data, header);
                 }
-            } catch (Exception ex) {
-                showException(ex);
             } finally {
                 if (mapWriter != null) {
-                    try {
-                        mapWriter.close();
-                    } catch (IOException ex) {
-                        showException(ex);
-                    }
+                    mapWriter.close();
                 }
             }
         }

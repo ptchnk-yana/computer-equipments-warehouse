@@ -31,7 +31,7 @@ public class NewRoomAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         List<Room> rooms = this.roomDao.list();
         List<User> users = this.userDao.list();
         NewRoomPanel panel = new NewRoomPanel(users.toArray(new User[users.size()]));

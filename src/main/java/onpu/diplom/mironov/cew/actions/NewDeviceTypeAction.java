@@ -27,7 +27,7 @@ public class NewDeviceTypeAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         NewDeviceTypePanel panel = new NewDeviceTypePanel();
         if(JOptionPane.YES_OPTION == JOptionPane.showOptionDialog(
                 view, 

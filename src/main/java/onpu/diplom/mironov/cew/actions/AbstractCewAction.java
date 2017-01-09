@@ -2,13 +2,18 @@ package onpu.diplom.mironov.cew.actions;
 
 import java.util.Map;
 import java.util.Properties;
+import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import onpu.diplom.mironov.cew.bean.User;
 import onpu.diplom.mironov.cew.model.MainTableModel;
 import onpu.diplom.mironov.cew.view.MainFrame;
+import onpu.diplom.mironov.cew.bean.Building;
 import static javax.swing.Action.LARGE_ICON_KEY;
 import static javax.swing.Action.NAME;
 import static javax.swing.Action.SMALL_ICON;
@@ -35,6 +40,16 @@ public abstract class AbstractCewAction extends AbstractAction {
         setEnabled(user.getPrivilege().getPrivilageValue() <= type.getPrivilege().getPrivilageValue());
     }
 
+    @Override
+    public final void actionPerformed(ActionEvent e) {
+        try {
+            actionPerformedImpl(e);
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            showException(ex);
+        }
+    }
+
     protected ImageIcon getImageIcon(String name) {
         try {
             return new ImageIcon(getClass().getResource("/images/" + name + ".png"));
@@ -58,10 +73,23 @@ public abstract class AbstractCewAction extends AbstractAction {
         if (title == null) {
             title = getText("error.title");
         }
-        JOptionPane.showMessageDialog(view, msg, getText("error.title"), 
-                JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(view, msg, title, JOptionPane.ERROR_MESSAGE);
     }
 
+    protected Building getSelectedBuilding() {
+        JTree roomsTree = view.getRoomsTree();
+        TreePath selectionPath = roomsTree.getSelectionPath();
+        if (selectionPath != null) {
+            Object userObject = ((DefaultMutableTreeNode)selectionPath
+                    .getLastPathComponent()).getUserObject();
+            if (userObject instanceof Building) {
+                return (Building)userObject;
+            }
+        }
+        return null;
+    }
 
     protected abstract ActionEnum getType();
+
+    public abstract void actionPerformedImpl(ActionEvent e) throws Exception;
 }

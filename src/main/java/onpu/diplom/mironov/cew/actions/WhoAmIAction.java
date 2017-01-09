@@ -21,7 +21,7 @@ public class WhoAmIAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         JOptionPane.showMessageDialog(view, new StringBuilder()
                 .append(getText("column.id")).append(": ")
                 .append(currentUser.getId()).append('\n')

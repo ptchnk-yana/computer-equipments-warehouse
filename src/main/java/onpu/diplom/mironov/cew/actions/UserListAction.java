@@ -24,7 +24,7 @@ public class UserListAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         // We don't check privileges here, because only admin can see this action.
         actions.get(ActionEnum.DELETE).setEnabled(false);
         tableModel.init(userList());
