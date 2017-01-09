@@ -3,6 +3,7 @@ package onpu.diplom.mironov.cew.dao.jdbi;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import onpu.diplom.mironov.cew.bean.Building;
 import onpu.diplom.mironov.cew.bean.Device;
 import onpu.diplom.mironov.cew.bean.DeviceType;
 import onpu.diplom.mironov.cew.bean.Room;
@@ -30,7 +31,7 @@ public class DeviceJdbiDao extends AbstractJdbiDao<Device> implements DeviceDao 
     public static final String DESCRIPTION = "description";
 
     public DeviceJdbiDao(DBI dbi) {
-        super(dbi, DeviceJdbiDaoResource.class);
+        super(dbi, Device.class, DeviceJdbiDaoResource.class);
     }
 
     @Override
@@ -47,25 +48,35 @@ public class DeviceJdbiDao extends AbstractJdbiDao<Device> implements DeviceDao 
     }
 
     @Override
-    public List<Device> findByTypeAndUserAndRoom(DeviceType deviceType, User user, Room room) {
+    public List<Device> findByTypeAndUserAndRoomAndBuilding(DeviceType deviceType, 
+            User user, Room room, Building building) {
         DeviceJdbiDaoResource connection = null;
         try {
-            return (connection = open()).findByTypeAndUserAndRoom(
+            return (connection = open()).findByTypeAndUserAndRoomAndBuilding(
                     deviceType != null ? deviceType.getId() : null,
                     user != null ? user.getId() : null,
-                    room != null ? room.getId() : null);
+                    room != null ? room.getId() : null,
+                    building != null ? building.getId() : null);
         } finally {
             close(connection);
         }
     }
 
-    @Override
-    public Class<Device> getBeanClass() {
-        return Device.class;
-    }
-
     @RegisterMapper(DeviceJdbiMapper.class)
     public static interface DeviceJdbiDaoResource extends SqlObjectType<Device> {
+        public static final String BASE_QUERY = 
+                "SELECT d." + ID + " as " + ID + "," +
+                        " d." + ROOM_ID + " as " + ROOM_ID + "," +
+                        " r." + RoomJdbiDao.NUMBER + " as " + ROOM_NUMBER + "," +
+                        " d." + DEVICE_TYPE_ID + " as " + DEVICE_TYPE_ID + "," +
+                        " t." + DeviceTypeJdbiDao.TITLE + " as " + DEVICE_TITLE + "," +
+                        " t." + DeviceTypeJdbiDao.IMAGE_URL + " as " + DEVICE_IMAGE_URL + "," +
+                        " d." + HASH + " as " + HASH + "," +
+                        " d." + DESCRIPTION + " as " + DESCRIPTION +
+                " FROM " + 
+                    DEVICE + " d " + 
+                    " LEFT JOIN " + RoomJdbiDao.ROOM + " r ON d." + ROOM_ID + " = r." + ID +
+                    " LEFT JOIN " + DeviceTypeJdbiDao.DEVICE_TYPE + " t ON d." + DEVICE_TYPE_ID + " = t." + ID;
 
         @SqlUpdate("INSERT INTO " + DEVICE + " (" +
                     ID + ", " + 
@@ -88,57 +99,27 @@ public class DeviceJdbiDao extends AbstractJdbiDao<Device> implements DeviceDao 
         int delete(@Bind(ID) long id);
 
         @Override
-        @SqlQuery("SELECT d." + ID + " as " + ID + "," +
-                        " d." + ROOM_ID + " as " + ROOM_ID + "," +
-                        " r." + RoomJdbiDao.NUMBER + " as " + ROOM_NUMBER + "," +
-                        " d." + DEVICE_TYPE_ID + " as " + DEVICE_TYPE_ID + "," +
-                        " t." + DeviceTypeJdbiDao.TITLE + " as " + DEVICE_TITLE + "," +
-                        " t." + DeviceTypeJdbiDao.IMAGE_URL + " as " + DEVICE_IMAGE_URL + "," +
-                        " d." + HASH + " as " + HASH + "," +
-                        " d." + DESCRIPTION + " as " + DESCRIPTION +
-                " FROM " + 
-                    DEVICE + " d " + 
-                    " LEFT JOIN " + RoomJdbiDao.ROOM + " r ON d." + ROOM_ID + " = r." + ID +
-                    " LEFT JOIN " + DeviceTypeJdbiDao.DEVICE_TYPE + " t ON d." + DEVICE_TYPE_ID + " = t." + ID +
+        @SqlQuery(BASE_QUERY +
                 " WHERE " + ID + " = :" + ID)
         Device findById(@Bind(ID) long id);
 
         @Override
-        @SqlQuery("SELECT d." + ID + " as " + ID + "," +
-                        " d." + ROOM_ID + " as " + ROOM_ID + "," +
-                        " r." + RoomJdbiDao.NUMBER + " as " + ROOM_NUMBER + "," +
-                        " d." + DEVICE_TYPE_ID + " as " + DEVICE_TYPE_ID + "," +
-                        " t." + DeviceTypeJdbiDao.TITLE + " as " + DEVICE_TITLE + "," +
-                        " t." + DeviceTypeJdbiDao.IMAGE_URL + " as " + DEVICE_IMAGE_URL + "," +
-                        " d." + HASH + " as " + HASH + "," +
-                        " d." + DESCRIPTION + " as " + DESCRIPTION +
-                " FROM " + 
-                    DEVICE + " d " + 
-                    " LEFT JOIN " + RoomJdbiDao.ROOM + " r ON d." + ROOM_ID + " = r." + ID +
-                    " LEFT JOIN " + DeviceTypeJdbiDao.DEVICE_TYPE + " t ON d." + DEVICE_TYPE_ID + " = t." + ID)
+        @SqlQuery(BASE_QUERY)
         List<Device> findAll();
         
-        @SqlQuery("SELECT d." + ID + " as " + ID + "," +
-                        " d." + ROOM_ID + " as " + ROOM_ID + "," +
-                        " r." + RoomJdbiDao.NUMBER + " as " + ROOM_NUMBER + "," +
-                        " d." + DEVICE_TYPE_ID + " as " + DEVICE_TYPE_ID + "," +
-                        " t." + DeviceTypeJdbiDao.TITLE + " as " + DEVICE_TITLE + "," +
-                        " t." + DeviceTypeJdbiDao.IMAGE_URL + " as " + DEVICE_IMAGE_URL + "," +
-                        " d." + HASH + " as " + HASH + "," +
-                        " d." + DESCRIPTION + " as " + DESCRIPTION +
-                " FROM " + 
-                    DEVICE + " d " + 
-                    " LEFT JOIN " + RoomJdbiDao.ROOM + " r ON d." + ROOM_ID + " = r." + ID +
+        @SqlQuery(BASE_QUERY +
                     " LEFT JOIN " + UserJdbiDao.USER + " u ON r." + RoomJdbiDao.USER_ID + " = u." + ID +
-                    " LEFT JOIN " + DeviceTypeJdbiDao.DEVICE_TYPE + " t ON d." + DEVICE_TYPE_ID + " = t." + ID +
+                    " LEFT JOIN " + BuildingJdbiDao.BUILDING + " b ON r." + RoomJdbiDao.BUILDING_ID + " = b." + ID +
                 " WHERE " +
-                    "(:typeId is NULL OR :typeId = t." + ID + ") " +
-                    "AND (:userId is NULL OR :userId = u." + ID + ") " +
-                    "AND (:roomId is NULL OR :roomId = r." + ID + ") "
+                    " (:typeId is NULL OR :typeId = t." + ID + ") " +
+                    " AND (:userId is NULL OR :userId = u." + ID + ") " +
+                    " AND (:roomId is NULL OR :roomId = r." + ID + ") " +
+                    " AND (:buildingId is NULL OR :buildingId = b." + ID + ") "
         )
-        List<Device> findByTypeAndUserAndRoom(@Bind("typeId") Long typeId,
+        List<Device> findByTypeAndUserAndRoomAndBuilding(@Bind("typeId") Long typeId,
                 @Bind("userId") Long userId,
-                @Bind("roomId") Long roomId);
+                @Bind("roomId") Long roomId,
+                @Bind("buildingId") Long buildingId);
     }
 
     public static class DeviceJdbiMapper implements ResultSetMapper<Device> {

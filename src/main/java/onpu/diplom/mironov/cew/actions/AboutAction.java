@@ -21,7 +21,7 @@ public class AboutAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         JOptionPane.showMessageDialog(view, getText("about.msg"), getText("about.title"), 
                 JOptionPane.INFORMATION_MESSAGE);
     }

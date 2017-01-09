@@ -22,12 +22,8 @@ public class PrintAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            view.getMainTable().print(JTable.PrintMode.NORMAL);
-        } catch (PrinterException ex) {
-            showException(ex);
-        }
+    public void actionPerformedImpl(ActionEvent e) throws PrinterException {
+        view.getMainTable().print(JTable.PrintMode.NORMAL);
     }
     
 }

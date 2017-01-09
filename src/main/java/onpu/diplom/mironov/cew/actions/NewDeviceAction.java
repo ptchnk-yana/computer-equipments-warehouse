@@ -11,6 +11,7 @@ import onpu.diplom.mironov.cew.bean.DeviceType;
 import onpu.diplom.mironov.cew.bean.Room;
 import onpu.diplom.mironov.cew.bean.User;
 import onpu.diplom.mironov.cew.dao.DeviceDao;
+import onpu.diplom.mironov.cew.dao.DeviceTypeDao;
 import onpu.diplom.mironov.cew.model.MainTableModel;
 import onpu.diplom.mironov.cew.view.MainFrame;
 import onpu.diplom.mironov.cew.view.NewDevicePanel;
@@ -18,12 +19,14 @@ import onpu.diplom.mironov.cew.view.NewDevicePanel;
 public class NewDeviceAction extends AbstractCewAction {
 
     private final DeviceDao deviceDao;
+    private final DeviceTypeDao deviceTypeDao;
 
     public NewDeviceAction(User user, MainFrame view, MainTableModel tableModel,
             Map<ActionEnum, AbstractCewAction> actions, Properties text,
-            DeviceDao deviceDao) {
+            DeviceDao deviceDao, DeviceTypeDao deviceTypeDao) {
         super(user, view, tableModel, actions, text);
         this.deviceDao = deviceDao;
+        this.deviceTypeDao = deviceTypeDao;
     }
 
     @Override
@@ -32,12 +35,11 @@ public class NewDeviceAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         List<Room> roomList = new ArrayList<Room>();
-        User selectedUser = ((RoomListAction) actions.get(ActionEnum.ROOM_LIST))
-                .fillRoomList(roomList, false);
-        List<DeviceType> listDeviceTypes = ((DeviceTypeListAction) actions
-                .get(ActionEnum.DEVICE_TYPE_LIST)).listDeviceTypes();
+        // TODO: extract this method to some util or service
+        ((RoomListAction) actions.get(ActionEnum.ROOM_LIST)).fillRoomList(roomList, false);
+        List<DeviceType> listDeviceTypes = deviceTypeDao.list();
 
         NewDevicePanel panel = new NewDevicePanel(
                 listDeviceTypes.toArray(new DeviceType[listDeviceTypes.size()]),

@@ -8,16 +8,20 @@ public class Room extends AbstractBean {
     private int number;
     private String title;
 
+    private long buildingId;
+
     public Room() {
     }
 
-    public Room(long id, long userId, String userName, UserPrivilege userPrivilege, int number, String title) {
+    public Room(long id, long userId, String userName, UserPrivilege userPrivilege, 
+            int number, String title, long building_id) {
         super(id);
         this.userId = userId;
         this.userName = userName;
         this.userPrivilege = userPrivilege;
         this.number = number;
         this.title = title;
+        this.buildingId = building_id;
     }
 
     public Room(long userId, int number, String title) {
@@ -66,11 +70,19 @@ public class Room extends AbstractBean {
         this.userPrivilege = userPrivilege;
     }
 
+    public long getBuildingId() {
+        return buildingId;
+    }
+
+    public void setBuildingId(long buildingId) {
+        this.buildingId = buildingId;
+    }
+
     @Override
     public String toString() {
         return "Room{" + "userId=" + userId + ", userName=" + userName + 
                 ", userPrivilege=" + userPrivilege + ", number=" + number + 
-                ", title=" + title + '}';
+                ", title=" + title + ", buildingId" + buildingId + '}';
     }
 
 }

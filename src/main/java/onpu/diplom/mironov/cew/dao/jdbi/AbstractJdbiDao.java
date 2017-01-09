@@ -12,9 +12,10 @@ public abstract class AbstractJdbiDao<T extends AbstractBean> implements Abstrac
 
     public static final String ID = "id";
     protected final DBI dbi;
-    protected final Class<? extends SqlObjectType> sqlObjectType;
+    protected final Class<? extends SqlObjectType<T>> sqlObjectType;
+    private final Class<T> beanClass;
 
-    public AbstractJdbiDao(DBI dbi, Class<? extends SqlObjectType> sqlObjectType) {
+    public AbstractJdbiDao(DBI dbi, Class<T> beanClass, Class<? extends SqlObjectType<T>> sqlObjectType) {
         if (dbi == null) {
             throw new IllegalArgumentException("JDBI cannot be null");
         }
@@ -23,6 +24,7 @@ public abstract class AbstractJdbiDao<T extends AbstractBean> implements Abstrac
         }
         this.dbi = dbi;
         this.sqlObjectType = sqlObjectType;
+        this.beanClass = beanClass;
         dbi.setSQLLog(new FormattedLog() {
             @Override
             protected boolean isEnabled() {
@@ -66,6 +68,11 @@ public abstract class AbstractJdbiDao<T extends AbstractBean> implements Abstrac
         } finally {
             close(connection);
         }
+    }
+
+    @Override
+    public Class<T> getBeanClass() {
+        return this.beanClass;
     }
 
     protected <S extends SqlObjectType> S open() {

@@ -16,7 +16,7 @@ public class ExitAction extends AbstractCewAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformedImpl(ActionEvent e) {
         if (JOptionPane.YES_OPTION == JOptionPane.showOptionDialog(view, 
                 getText("exit.msg"), 
                 getText("exit.title"), 

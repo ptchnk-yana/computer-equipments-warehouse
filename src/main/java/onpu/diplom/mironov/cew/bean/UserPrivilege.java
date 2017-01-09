@@ -1,7 +1,7 @@
 package onpu.diplom.mironov.cew.bean;
 
 public enum UserPrivilege {
-    ADMIN(0), OPERATOR(1);
+    SYSTEM(0), ADMIN(1), OPERATOR(2);
 
     private final int privilageValue;
 

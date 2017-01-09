@@ -3,6 +3,7 @@ package onpu.diplom.mironov.cew.dao.jdbi;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import onpu.diplom.mironov.cew.bean.Building;
 import onpu.diplom.mironov.cew.bean.Room;
 import onpu.diplom.mironov.cew.bean.User;
 import onpu.diplom.mironov.cew.dao.RoomDao;
@@ -24,8 +25,10 @@ public class RoomJdbiDao extends AbstractJdbiDao<Room> implements RoomDao {
     public static final String NUMBER = "number";
     public static final String TITLE = "title";
 
+    public static final String BUILDING_ID = "building_id";
+
     public RoomJdbiDao(DBI dbi) {
-        super(dbi, RoomJdbiDaoResource.class);
+        super(dbi, Room.class, RoomJdbiDaoResource.class);
     }
 
     @Override
@@ -34,7 +37,7 @@ public class RoomJdbiDao extends AbstractJdbiDao<Room> implements RoomDao {
             RoomJdbiDaoResource connection = null;
             try {
                 (connection = open()).insert(t.getId(), t.getUserId(),
-                        t.getNumber(), t.getTitle());
+                        t.getNumber(), t.getTitle(), t.getBuildingId());
             } finally {
                 close(connection);
             }
@@ -42,13 +45,12 @@ public class RoomJdbiDao extends AbstractJdbiDao<Room> implements RoomDao {
     }
 
     @Override
-    public List<Room> findByUser(User user) {
-        if (user == null) {
-            return list();
-        }
+    public List<Room> findByUserAndBuilding(User user, Building building) {
         RoomJdbiDaoResource connection = null;
         try {
-            return (connection = open()).findByUserId(user.getId());
+            return (connection = open()).findByUserIdAndBuildingId(
+                    user != null ? user.getId() : null,
+                    building != null ? building.getId() : null);
         } finally {
             close(connection);
         }
@@ -61,57 +63,55 @@ public class RoomJdbiDao extends AbstractJdbiDao<Room> implements RoomDao {
 
     @RegisterMapper(RoomJdbiMapper.class)
     public static interface RoomJdbiDaoResource extends SqlObjectType<Room> {
+        public static final String BASE_QUERY = 
+                "SELECT r." + ID + " as " + ID + "," + 
+                        " r." + USER_ID + " as " + USER_ID + "," + 
+                        " r." + NUMBER + " as " + NUMBER + "," + 
+                        " r." + TITLE + " as " + TITLE + "," + 
+                        " u." + UserJdbiDao.NAME + " as " + USER_NAME + "," + 
+                        " u." + UserJdbiDao.PRIVILEGE + " as " + USER_PRIVILEGE + "," +
+                        " r." + BUILDING_ID + " as " + BUILDING_ID +
+                " FROM " + 
+                    ROOM + " r " + 
+                    " LEFT JOIN " + UserJdbiDao.USER + " u ON r." + USER_ID + " = u." + ID +
+                    " LEFT JOIN " + BuildingJdbiDao.BUILDING + " b ON r." + BUILDING_ID + " = b." + ID;
 
         @SqlUpdate("INSERT INTO " + ROOM + " (" +
-                ID + ", " + USER_ID + ", " + NUMBER + ", " + TITLE +
+                    ID + ", " + 
+                    USER_ID + ", " + 
+                    NUMBER + ", " + 
+                    TITLE + ", " + 
+                    BUILDING_ID +
                 ") VALUES (" +
-                ":" + ID + ", :" + USER_ID + ", :" + NUMBER + ", :" + TITLE + ")")
+                    ":" + ID + ", " +
+                    ":" + USER_ID + ", " +
+                    ":" + NUMBER + ", " +
+                    ":" + TITLE + ", " +
+                    ":" + BUILDING_ID + 
+                ")")
         int insert(@Bind(ID) long id, @Bind(USER_ID) long userId, 
-                @Bind(NUMBER) int number,  @Bind(TITLE) String title);
+                @Bind(NUMBER) int number,  @Bind(TITLE) String title, 
+                @Bind(BUILDING_ID) long buildingId);
 
         @Override
         @SqlUpdate("DELETE FROM " + ROOM + " WHERE " + ID + " = :" + ID)
         int delete(@Bind(ID) long id);
 
         @Override
-        @SqlQuery("SELECT r." + ID + " as " + ID + "," + 
-                        " r." + USER_ID + " as " + USER_ID + "," + 
-                        " r." + NUMBER + " as " + NUMBER + "," + 
-                        " r." + TITLE + " as " + TITLE + "," + 
-                        " u." + UserJdbiDao.NAME + " as " + USER_NAME + "," + 
-                        " u." + UserJdbiDao.PRIVILEGE + " as " + USER_PRIVILEGE + 
-                " FROM " + 
-                    ROOM + " r " + 
-                    " LEFT JOIN " + UserJdbiDao.USER + " u " + 
-                        " ON r." + USER_ID + " = u." + ID +
+        @SqlQuery(BASE_QUERY +
                 " WHERE " + ID + " = :" + ID)
         Room findById(@Bind(ID) long id);
 
         @Override
-        @SqlQuery("SELECT r." + ID + " as " + ID + "," + 
-                        " r." + USER_ID + " as " + USER_ID + "," + 
-                        " r." + NUMBER + " as " + NUMBER + "," + 
-                        " r." + TITLE + " as " + TITLE + "," + 
-                        " u." + UserJdbiDao.NAME + " as " + USER_NAME + "," + 
-                        " u." + UserJdbiDao.PRIVILEGE + " as " + USER_PRIVILEGE + 
-                " FROM " + 
-                    ROOM + " r " + 
-                    " LEFT JOIN " + UserJdbiDao.USER + " u " + 
-                        " ON r." + USER_ID + " = u." + ID)
+        @SqlQuery(BASE_QUERY)
         List<Room> findAll();
 
-        @SqlQuery("SELECT r." + ID + " as " + ID + "," + 
-                        " r." + USER_ID + " as " + USER_ID + "," + 
-                        " r." + NUMBER + " as " + NUMBER + "," + 
-                        " r." + TITLE + " as " + TITLE + "," + 
-                        " u." + UserJdbiDao.NAME + " as " + USER_NAME + "," + 
-                        " u." + UserJdbiDao.PRIVILEGE + " as " + USER_PRIVILEGE + 
-                " FROM " + 
-                    ROOM + " r " + 
-                    " LEFT JOIN " + UserJdbiDao.USER + " u " + 
-                        " ON r." + USER_ID + " = u." + ID +
-                " WHERE " + USER_ID + " = :" + USER_ID)
-        List<Room> findByUserId(@Bind(USER_ID) long userId);
+        @SqlQuery(BASE_QUERY +
+                " WHERE" + 
+                    " (:userId is NULL OR " + USER_ID + " = :userId)" +
+                    " AND (:buildingId is NULL OR " + BUILDING_ID + " = :buildingId)")
+        List<Room> findByUserIdAndBuildingId(@Bind("userId") Long userId,
+                @Bind("buildingId") Long buildingId);
     }
 
     public static class RoomJdbiMapper implements ResultSetMapper<Room> {
@@ -123,7 +123,8 @@ public class RoomJdbiDao extends AbstractJdbiDao<Room> implements RoomDao {
                     r.getString(USER_NAME),
                     UserJdbiDao.extractUserPrivilege(r, USER_PRIVILEGE),
                     r.getInt(NUMBER),
-                    r.getString(TITLE));
+                    r.getString(TITLE),
+                    extractLongValue(r, BUILDING_ID, 0L));
         }
     }
 }

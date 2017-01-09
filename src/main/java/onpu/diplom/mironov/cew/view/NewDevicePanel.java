@@ -4,7 +4,7 @@ import javax.swing.Icon;
 import onpu.diplom.mironov.cew.CewUtil;
 import onpu.diplom.mironov.cew.bean.DeviceType;
 import onpu.diplom.mironov.cew.bean.Room;
-import onpu.diplom.mironov.cew.model.CewCellRenderer;
+import onpu.diplom.mironov.cew.model.DefaultListCellRenderer;
 
 public class NewDevicePanel extends javax.swing.JPanel {
     private DeviceType[] deviceTypes;
@@ -19,7 +19,7 @@ public class NewDevicePanel extends javax.swing.JPanel {
         this.deviceTypes = deviceTypes;
         this.rooms = rooms;
         initComponents();
-        deviceComboBox.setRenderer(new CewCellRenderer<DeviceType>(){
+        deviceComboBox.setRenderer(new DefaultListCellRenderer<DeviceType>(){
             @Override
             protected String getText(DeviceType value) {
                 return value.getTitle();
@@ -29,7 +29,7 @@ public class NewDevicePanel extends javax.swing.JPanel {
                 return CewUtil.createScaledImageIcon(value.getImageUrl());
             }
         });
-        roomComboBox.setRenderer(new CewCellRenderer<Room>(){
+        roomComboBox.setRenderer(new DefaultListCellRenderer<Room>(){
             @Override
             protected String getText(Room value) {
                 return value.getNumber() + " \"" + value.getTitle() + "\"";

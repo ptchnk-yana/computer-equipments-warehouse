@@ -11,12 +11,15 @@ public enum ActionEnum {
     NEW_ROOM(UserPrivilege.ADMIN),
     NEW_DEVICE_TYPE(UserPrivilege.ADMIN),
     NEW_DEVICE,
+    NEW_BUILDING(UserPrivilege.ADMIN),
     DELETE,
+    DELETE_BUILDING(UserPrivilege.ADMIN),
 
     USER_LIST(UserPrivilege.ADMIN),
     ROOM_LIST,
     DEVICE_TYPE_LIST,
     DEVICE_LIST,
+    BUILDING_LIST_REFRESH,
 
     WHO_AM_I,
     ABOUT;

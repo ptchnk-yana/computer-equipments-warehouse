@@ -29,16 +29,18 @@ public abstract class AbstractTsvDao<T extends AbstractBean> implements Abstract
     protected final String[] header;
     protected Map<Long, T> cache = null;
     protected final Object cacheAnchor = new Object();
+    private final Class<T> beanClass;
 
-    public AbstractTsvDao(File file) {
-        this(file, DEFAULT_CSV_PREFERENCE);
+    public AbstractTsvDao(File file, Class<T> beanClass) {
+        this(file, DEFAULT_CSV_PREFERENCE, beanClass);
     }
 
-    public AbstractTsvDao(File file, CsvPreference csvPreference) {
+    public AbstractTsvDao(File file, CsvPreference csvPreference, Class<T> beanClass) {
         this.file = file;
         this.csvPreference = csvPreference;
         this.processors = getProcessors();
         this.header = getHeader();
+        this.beanClass = beanClass;
         file.getParentFile().mkdirs();
     }
 
@@ -132,6 +134,11 @@ public abstract class AbstractTsvDao<T extends AbstractBean> implements Abstract
                 }
             }
         }
+    }
+
+    @Override
+    public Class<T> getBeanClass() {
+        return beanClass;
     }
 
     protected abstract CellProcessor[] getProcessors();
