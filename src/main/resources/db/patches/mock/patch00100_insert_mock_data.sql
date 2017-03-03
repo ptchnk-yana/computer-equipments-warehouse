@@ -3,6 +3,7 @@ DELETE FROM room;
 DELETE FROM user;
 DELETE FROM device_type;
 DELETE FROM building;
+DELETE FROM request;
 
 INSERT INTO building (id, name, comment) VALUES (1, 'ИКС', 'ИКС - Институт Компьютерных Систем. Ранее известен как ФАВТ - факультет автоматики и вычислительной техники');
 INSERT INTO building (id, name, comment) VALUES (2, 'Админ', 'Админ - Административное здание института');
@@ -132,3 +133,9 @@ FROM
 UPDATE device d SET (description) = (SELECT s FROM t1 WHERE t1.id = d.id);
 
 DROP TABLE t1;
+
+INSERT INTO request (id, user_id, title, description, status) VALUES (1, 2, 'Добовление оборудования в 303', 
+        'В аудиторию №303 был добавлен новый компьютер, которого еще нет в нашей базе. Его необходимо зарегистрировать.\n\tСистемный блок: Intel(R) Core(TM) i5-4690K CPU @ 3.50GHz', 'OPEN');
+
+INSERT INTO request (id, user_id, title, description, status) VALUES (2, 3, 'Изменение оборудования в 402', 
+        'В аудиторию №402 поменяли монитор на более новый. Это необходимо отобразить в базе.\n   DELL U2412M (DEP-0): X screen 0', 'OPEN');

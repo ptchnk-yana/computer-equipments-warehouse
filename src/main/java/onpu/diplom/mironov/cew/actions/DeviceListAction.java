@@ -77,7 +77,7 @@ public class DeviceListAction extends AbstractCewAction {
                 deviceType, user, room, getSelectedBuilding());
         view.getStatusLabel().setText(status);
         actions.get(ActionEnum.DELETE).setEnabled(false);
-        tableModel.init(listDevices);
+        tableModel.init(Device.class, listDevices);
     }
 
 }

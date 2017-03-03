@@ -28,13 +28,13 @@ public class MainTableModel extends AbstractTableModel {
         this.text = text;
         this.currentUser = currentUser;
         this.specialPrivilagesForColumns = specialPrivilagesForColumns;
-        init(Collections.EMPTY_LIST);
+        init(AbstractBean.class, Collections.EMPTY_LIST);
     }
 
-    public void init(List<? extends AbstractBean> data) {
+    public void init(Class<? extends AbstractBean> dataType, List<? extends AbstractBean> data) {
         this.data = data;
         if (data.isEmpty()) {
-            dataType = AbstractBean.class;
+            this.dataType = dataType;
         } else {
             this.dataType = data.get(0).getClass();
         }

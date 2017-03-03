@@ -34,13 +34,13 @@ public class RoomListAction extends AbstractCewAction {
     }
 
     public void actionPerformedImpl(boolean showNotification) throws HeadlessException {
-        List<Room> list = new ArrayList<Room>();
+        List<Room> list = new ArrayList<>();
         User user = fillRoomList(list, showNotification);
         view.getStatusLabel().setText(user != null 
                 ? String.format(getText("room_list.status.user"), user.getName())
                 : getText("room_list.status"));
         actions.get(ActionEnum.DELETE).setEnabled(false);
-        tableModel.init(list);
+        tableModel.init(Room.class, list);
     }
 
     public User fillRoomList(List<Room> list, boolean showNotification) throws HeadlessException {

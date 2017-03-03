@@ -1,14 +1,14 @@
 package onpu.diplom.mironov.cew;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import static onpu.diplom.mironov.cew.CewUtil.checkNotNull;
 
@@ -57,31 +57,21 @@ public class ConfigurationService {
     }
 
     private Properties loadConfProperties() {
-        try {
-            return loadProperties(new FileInputStream(configFile), false);
-        } catch (FileNotFoundException ex) {
+        try (InputStream input = FileUtils.openInputStream(configFile)){
+            return loadProperties(input, false);
+        } catch (IOException ex) {
             // use default values
             return new Properties();
         }
     }
 
     private Properties storeConfProperties() {
-        FileOutputStream output = null;
-        try {
-            applicationConfiguration.store(
-                    output = new FileOutputStream(configFile), 
-                    "Updated on " + new Date());
+        try(FileOutputStream output = FileUtils.openOutputStream(this.configFile)) {
+            this.applicationConfiguration.store(output,"Updated on " + new Date());
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
-        } finally {
-            try {
-                if (output != null) {
-                    output.close();
-                }
-            } catch (IOException ex) {
-            }
         }
-        return applicationConfiguration;
+        return this.applicationConfiguration;
     }
 
     public static Properties loadProperties(InputStream input, boolean throwException) {
@@ -91,13 +81,6 @@ public class ConfigurationService {
         } catch (IOException ex) {
             if (throwException) {
                 throw new IllegalArgumentException(ex);
-            }
-        } finally {
-            try {
-                if (input != null) {
-                    input.close();
-                }
-            } catch (IOException ex) {
             }
         }
         return properties;

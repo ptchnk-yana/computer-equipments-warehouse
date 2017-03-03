@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS building (
-	id BIGINT NOT NULL PRIMARY KEY,
-	name VARCHAR(256),
-	comment VARCHAR(256)
+    id BIGINT NOT NULL PRIMARY KEY,
+    name VARCHAR(256),
+    comment VARCHAR(256)
 );
 
 ALTER TABLE room ADD building_id BIGINT;

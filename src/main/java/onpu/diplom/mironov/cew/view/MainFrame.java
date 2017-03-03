@@ -10,9 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.swing.AbstractAction;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -29,31 +31,34 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
+import static javax.swing.JSplitPane.VERTICAL_SPLIT;
+import javax.swing.ListCellRenderer;
+import onpu.diplom.mironov.cew.bean.Request;
 
 public class MainFrame extends JFrame {
-    private final JMenuBar menuBar;
-    private final JToolBar toolBar;
-    private final JLabel statusLabel;
-    private final JTable mainTable;
-    private final JTree roomsTree;
+    private final JMenuBar menuBar = new JMenuBar();
+    private final JToolBar toolBar = new JToolBar();
+    private final JLabel requestsLabel = new JLabel("");
+    private final JList<Request> requestsList = new JList<>(new DefaultListModel<Request>());
+    private final JTree roomsTree = new JTree(new DefaultMutableTreeNode());
+    private final JTable mainTable = new JTable();
+    private final JLabel statusLabel = new JLabel("");
 
     public MainFrame()  throws HeadlessException {
-        menuBar = new JMenuBar();
-        toolBar = new JToolBar();
-        statusLabel = new JLabel("");
-        mainTable = new JTable();
-        roomsTree = new JTree(new DefaultMutableTreeNode());
         toolBar.setOrientation(JToolBar.HORIZONTAL);
         toolBar.setFloatable(false);
 
         JPanel statusPanel = new JPanel(new BorderLayout());
         statusPanel.add(statusLabel, BorderLayout.WEST);
         statusPanel.add(new ResizeCornerPanel(20), BorderLayout.EAST);
-        
+
+        JPanel requestsListPanel = new JPanel(new BorderLayout());
+        requestsListPanel.add(requestsLabel, BorderLayout.PAGE_START);
+        requestsListPanel.add(new JScrollPane(requestsList), BorderLayout.CENTER);
         JSplitPane mainSplitPane = new JSplitPane(HORIZONTAL_SPLIT,  
-                roomsTree,
+                new JSplitPane(VERTICAL_SPLIT, roomsTree, requestsListPanel),
                 new JScrollPane(mainTable));
-        mainSplitPane.setDividerLocation(.25);
+        mainSplitPane.setDividerLocation(.35);
 
         setLayout(new BorderLayout());
         Container contentPane = getContentPane();
@@ -69,12 +74,17 @@ public class MainFrame extends JFrame {
             final AbstractAction exitAction,
             TableModel dataModel,
             ListSelectionListener mainTalbeSelectionListener,
-            TreeCellRenderer roomsTreeCellRenderer) {
+            TreeCellRenderer roomsTreeCellRenderer,
+            ListCellRenderer<Request> requestsListCellRenderer) {
 
         mainTable.setModel(dataModel);
         ListSelectionModel tableSelectionModel = mainTable.getSelectionModel();
         tableSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableSelectionModel.addListSelectionListener(mainTalbeSelectionListener);
+
+        requestsLabel.setText(text.getProperty("mainframe.requests.title", "Requests"));
+        requestsList.setCellRenderer(requestsListCellRenderer);
+        requestsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         roomsTree.setCellRenderer(roomsTreeCellRenderer);
         roomsTree.expandRow(0);
@@ -114,6 +124,10 @@ public class MainFrame extends JFrame {
 
     public JTable getMainTable() {
         return mainTable;
+    }
+
+    public JList<Request> getRequestsList() {
+        return requestsList;
     }
 
     public JTree getRoomsTree() {

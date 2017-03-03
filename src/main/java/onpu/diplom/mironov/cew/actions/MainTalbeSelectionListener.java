@@ -17,6 +17,7 @@ import static onpu.diplom.mironov.cew.actions.ActionEnum.NEW_DEVICE;
 import static onpu.diplom.mironov.cew.actions.ActionEnum.NEW_DEVICE_TYPE;
 import static onpu.diplom.mironov.cew.actions.ActionEnum.NEW_ROOM;
 import static onpu.diplom.mironov.cew.actions.ActionEnum.NEW_USER;
+import onpu.diplom.mironov.cew.bean.Request;
 
 public class MainTalbeSelectionListener implements ListSelectionListener {
     protected final MainFrame view;
@@ -37,6 +38,7 @@ public class MainTalbeSelectionListener implements ListSelectionListener {
         deletePrivileges.put(DeviceType.class, defineDeletePrivilege(NEW_DEVICE_TYPE, user));
         deletePrivileges.put(Room.class, defineDeletePrivilege(NEW_ROOM, user));
         deletePrivileges.put(User.class, defineDeletePrivilege(NEW_USER, user));
+        deletePrivileges.put(Request.class, defineDeletePrivilege(ActionEnum.NEW_REQUEST, user));
     }
 
     private static boolean defineDeletePrivilege(ActionEnum actionDef, User currentUser1) {

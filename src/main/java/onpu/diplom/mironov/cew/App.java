@@ -24,10 +24,17 @@ import com.tacitknowledge.util.migration.jdbc.DataSourceMigrationContext;
 import com.tacitknowledge.util.migration.jdbc.DatabaseType;
 import com.tacitknowledge.util.migration.jdbc.JdbcMigrationLauncher;
 import java.io.IOException;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import onpu.diplom.mironov.cew.actions.AboutAction;
 import onpu.diplom.mironov.cew.actions.AbstractCewAction;
 import onpu.diplom.mironov.cew.actions.ActionEnum;
 import onpu.diplom.mironov.cew.actions.BuildingListRefreshAction;
+import onpu.diplom.mironov.cew.actions.EditRequestAction;
+import onpu.diplom.mironov.cew.actions.NewRequestAction;
+import onpu.diplom.mironov.cew.actions.RequestListAction;
+import onpu.diplom.mironov.cew.actions.RequestListAllAction;
+import onpu.diplom.mironov.cew.actions.RequestListRefreshAction;
 import onpu.diplom.mironov.cew.actions.DeleteAction;
 import onpu.diplom.mironov.cew.actions.DeviceListAction;
 import onpu.diplom.mironov.cew.actions.DeviceTypeListAction;
@@ -42,29 +49,33 @@ import onpu.diplom.mironov.cew.actions.RoomListAction;
 import onpu.diplom.mironov.cew.actions.SaveAction;
 import onpu.diplom.mironov.cew.actions.UserListAction;
 import onpu.diplom.mironov.cew.actions.WhoAmIAction;
+import onpu.diplom.mironov.cew.actions.DeleteBuilding;
+import onpu.diplom.mironov.cew.actions.NewBuildingAction;
+import onpu.diplom.mironov.cew.bean.Request;
 import onpu.diplom.mironov.cew.bean.User;
 import onpu.diplom.mironov.cew.bean.UserPrivilege;
 import onpu.diplom.mironov.cew.dao.BuildingDao;
 import onpu.diplom.mironov.cew.dao.DeviceDao;
 import onpu.diplom.mironov.cew.dao.DeviceTypeDao;
+import onpu.diplom.mironov.cew.dao.RequestDao;
 import onpu.diplom.mironov.cew.dao.RoomDao;
 import onpu.diplom.mironov.cew.dao.UserDao;
 import onpu.diplom.mironov.cew.dao.jdbi.BuildingJdbiDao;
 import onpu.diplom.mironov.cew.dao.jdbi.DeviceJdbiDao;
 import onpu.diplom.mironov.cew.dao.jdbi.DeviceTypeJdbiDao;
+import onpu.diplom.mironov.cew.dao.jdbi.RequestJdbiDao;
 import onpu.diplom.mironov.cew.dao.jdbi.RoomJdbiDao;
 import onpu.diplom.mironov.cew.dao.jdbi.UserJdbiDao;
 import onpu.diplom.mironov.cew.model.MainTableModel;
 import onpu.diplom.mironov.cew.model.RoomsTreeCellRenderer;
+import onpu.diplom.mironov.cew.model.DefaultListCellRenderer;
 import onpu.diplom.mironov.cew.view.AuthenticationPanel;
 import onpu.diplom.mironov.cew.view.MainFrame;
 
 import static onpu.diplom.mironov.cew.ConfigurationService.loadProperties;
 import static onpu.diplom.mironov.cew.ConfigurationService.substitutWithSystemProperties;
-import onpu.diplom.mironov.cew.actions.DeleteBuilding;
-import onpu.diplom.mironov.cew.actions.NewBuildingAction;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
+import static org.apache.commons.io.IOUtils.toByteArray;
 
 /**
  * Entry point into the application
@@ -99,6 +110,12 @@ public class App {
                     + "iswing/lookandfeel/plaf.html");
             System.out.println("\t--data path\t set paht to data storage (loca"
                     + "tion of database files). By default it's " + baseDir);
+            System.out.printf(
+                    "\t--mock_init\t init database with mock data "
+                            + "(It's better to clear existing data on %s)%n",
+                    substitutWithSystemProperties(loadProperties(App.class
+                            .getResourceAsStream("/application.properties"), true))
+                            .getProperty("jdbc.url"));
             System.out.println("\t--help\t display this message and exit");
         } else {
             new App().run(lnfClass, baseDir, argsList.contains("--mock_init"));
@@ -124,23 +141,16 @@ public class App {
         runAutopatcher(ds, "db/patches", appProperties);
         if (createMockData) {
             configService.setOrganization("ОНПУ");
-            try {
-                FileUtils.writeByteArrayToFile(new File("/tmp/computer.png"), 
-                        IOUtils.toByteArray(getClass().getResourceAsStream("/images/mock/computer.png")));
-                FileUtils.writeByteArrayToFile(new File("/tmp/monitor.png"), 
-                        IOUtils.toByteArray(getClass().getResourceAsStream("/images/mock/monitor.png")));
-                FileUtils.writeByteArrayToFile(new File("/tmp/phone.png"), 
-                        IOUtils.toByteArray(getClass().getResourceAsStream("/images/mock/phone.png")));
-                FileUtils.writeByteArrayToFile(new File("/tmp/printer.png"), 
-                        IOUtils.toByteArray(getClass().getResourceAsStream("/images/mock/printer.png")));
-                FileUtils.writeByteArrayToFile(new File("/tmp/processor.png"), 
-                        IOUtils.toByteArray(getClass().getResourceAsStream("/images/mock/processor.png")));
-                FileUtils.writeByteArrayToFile(new File("/tmp/projector.png"), 
-                        IOUtils.toByteArray(getClass().getResourceAsStream("/images/mock/projector.png")));
-                runAutopatcher(ds, "db/patches/mock", appProperties);
-            } catch (IOException ex) {
-                throw new IllegalArgumentException(ex);
+            for (String image : new String[]{
+                "computer", "monitor", "phone", "printer", "processor", "projector"}) {
+                try {
+                    writeByteArrayToFile(new File("/tmp/" + image + ".png"),
+                            toByteArray(getClass().getResourceAsStream("/images/mock/" + image + ".png")));
+                } catch (IOException ex) {
+                    throw new IllegalArgumentException(ex);
+                }
             }
+            runAutopatcher(ds, "db/patches/mock", appProperties);
         }
         DBI dbi = new DBI(ds);
 
@@ -148,6 +158,7 @@ public class App {
         DeviceTypeDao deviceTypeDao = new DeviceTypeJdbiDao(dbi);
         RoomDao roomDao = new RoomJdbiDao(dbi);
         DeviceDao deviceDao = new DeviceJdbiDao(dbi);
+        RequestDao requestDao = new RequestJdbiDao(dbi);
         BuildingDao buildingDao = new BuildingJdbiDao(dbi);
 
         createDefaultOrganizationIfNotExist(configService, text);
@@ -159,20 +170,39 @@ public class App {
         MainTableModel mainTableModel = new MainTableModel(text, currentUser,
                 creatSspecialPrivilagesForColumnsMap());
 
-        Map<ActionEnum, AbstractCewAction> actions
-                = new EnumMap<ActionEnum, AbstractCewAction>(ActionEnum.class);
+        Map<ActionEnum, AbstractCewAction> actions = new EnumMap<>(ActionEnum.class);
         MainTalbeSelectionListener selectionListener = new MainTalbeSelectionListener(
                 mainFrame, actions, currentUser, mainTableModel);
         fillActionsMap(actions, currentUser, mainFrame, mainTableModel, text, 
                 selectionListener, configService, userDao, roomDao, deviceTypeDao,
-                deviceDao, buildingDao);
+                deviceDao, requestDao, buildingDao);
 
-        mainFrame.init(text, toolBarActions(actions), menuActions(text, actions), 
+        mainFrame.init(text, toolBarActions(actions), menuActions(text, actions),
                 actions.get(ActionEnum.EXIT), mainTableModel, selectionListener,
-                new RoomsTreeCellRenderer());
+                new RoomsTreeCellRenderer(), new DefaultListCellRenderer<Request>() {
+            @Override
+            protected String getText(Request value) {
+                return value.getTitle();
+            }
+
+            @Override
+            protected String getToolTipText(Request value) {
+                return value.getDescription();
+            }
+
+            @Override
+            protected Icon getIcon(Request value) {
+                try {
+                    return new ImageIcon(getClass().getResource("/images/status_" + value.getStatus().name().toLowerCase() + ".png"));
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        });
 
         selectionListener.valueChanged(null);
         actions.get(ActionEnum.BUILDING_LIST_REFRESH).actionPerformed(null);
+        actions.get(ActionEnum.REQUEST_LIST_REFRESH).actionPerformed(null);
         mainFrame.setVisible(true);
     }
 
@@ -189,7 +219,7 @@ public class App {
         try {
             launcher.doMigrations();
         } catch (MigrationException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException("Cannot patch the database with " + patchName, ex);
         }
     }
 
@@ -197,13 +227,20 @@ public class App {
             User currentUser, MainFrame mainFrame, MainTableModel mainTableModel,
             Properties text, MainTalbeSelectionListener selectionListener,
             ConfigurationService configService, UserDao userDao, RoomDao roomDao,
-            DeviceTypeDao deviceTypeDao, DeviceDao deviceDao, BuildingDao buildingDao) {
+            DeviceTypeDao deviceTypeDao, DeviceDao deviceDao, RequestDao requestDao,
+            BuildingDao buildingDao) {
         actions.put(ActionEnum.ABOUT, new AboutAction(currentUser, mainFrame,
                 mainTableModel, actions, text));
         actions.put(ActionEnum.DEVICE_LIST, new DeviceListAction(currentUser,
                 mainFrame, mainTableModel, actions, text, deviceDao));
         actions.put(ActionEnum.DEVICE_TYPE_LIST, new DeviceTypeListAction(
                 currentUser, mainFrame, mainTableModel, actions, text, deviceTypeDao));
+        actions.put(ActionEnum.REQUEST_LIST, new RequestListAction(currentUser, mainFrame,
+                mainTableModel, actions, text, requestDao));
+        actions.put(ActionEnum.REQUEST_LIST_ALL, new RequestListAllAction(currentUser, mainFrame,
+                mainTableModel, actions, text, requestDao));
+        actions.put(ActionEnum.REQUEST_LIST_REFRESH, new RequestListRefreshAction(currentUser, mainFrame,
+                mainTableModel, actions, text, requestDao));
         actions.put(ActionEnum.EXIT, new ExitAction(currentUser, mainFrame,
                 mainTableModel, actions, text));
         actions.put(ActionEnum.NEW_DEVICE, new NewDeviceAction(currentUser,
@@ -214,6 +251,10 @@ public class App {
                 mainTableModel, actions, text, roomDao, userDao));
         actions.put(ActionEnum.NEW_USER, new NewUserAction(currentUser, mainFrame,
                 mainTableModel, actions, text, userDao));
+        actions.put(ActionEnum.NEW_REQUEST, new NewRequestAction(currentUser, mainFrame,
+                mainTableModel, actions, text, requestDao));
+        actions.put(ActionEnum.EDIT_REQUEST, new EditRequestAction(currentUser, mainFrame,
+                mainTableModel, actions, text, requestDao));
         actions.put(ActionEnum.PRINT, new PrintAction(currentUser, mainFrame,
                 mainTableModel, actions, text));
         actions.put(ActionEnum.ROOM_LIST, new RoomListAction(currentUser, mainFrame,
@@ -226,7 +267,7 @@ public class App {
                 mainTableModel, actions, text));
         actions.put(ActionEnum.DELETE, new DeleteAction(currentUser, mainFrame,
                 mainTableModel, actions, text, selectionListener, userDao, roomDao,
-                deviceTypeDao, deviceDao));
+                deviceTypeDao, deviceDao, requestDao));
         actions.put(ActionEnum.NEW_BUILDING, new NewBuildingAction(currentUser,
                 mainFrame, mainTableModel, actions, text, configService, buildingDao));
         actions.put(ActionEnum.DELETE_BUILDING, new DeleteBuilding(currentUser,
@@ -237,8 +278,7 @@ public class App {
     }
 
     private Map<String, UserPrivilege> creatSspecialPrivilagesForColumnsMap() {
-        Map<String, UserPrivilege> specialPrivilagesForColumns
-                = new HashMap<String, UserPrivilege>();
+        Map<String, UserPrivilege> specialPrivilagesForColumns = new HashMap<>();
         specialPrivilagesForColumns.put("userId", UserPrivilege.ADMIN);
         specialPrivilagesForColumns.put("userName", UserPrivilege.ADMIN);
         specialPrivilagesForColumns.put("userPrivilege", UserPrivilege.ADMIN);
@@ -328,10 +368,7 @@ public class App {
             } else {
                 UIManager.setLookAndFeel(lnfClass);
             }
-        } catch (ClassNotFoundException ex) {
-        } catch (InstantiationException ex) {
-        } catch (IllegalAccessException ex) {
-        } catch (UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
         }
     }
 
@@ -343,13 +380,14 @@ public class App {
                 actions.get(ActionEnum.NEW_USER),
                 actions.get(ActionEnum.NEW_ROOM),
                 actions.get(ActionEnum.NEW_DEVICE),
+                actions.get(ActionEnum.NEW_REQUEST),
                 actions.get(ActionEnum.WHO_AM_I));
     }
 
     private Map<String, List<? extends AbstractAction>> menuActions(
             Properties text, Map<ActionEnum, AbstractCewAction> actions) {
         Map<String, List<? extends AbstractAction>> menu = 
-                new LinkedHashMap<String, List<? extends AbstractAction>>();
+                new LinkedHashMap<>();
         menu.put(text.getProperty("menu.file"), Arrays.asList(
                 actions.get(ActionEnum.SAVE), 
                 actions.get(ActionEnum.PRINT),
@@ -358,11 +396,17 @@ public class App {
                 actions.get(ActionEnum.BUILDING_LIST_REFRESH), 
                 actions.get(ActionEnum.NEW_BUILDING),
                 actions.get(ActionEnum.DELETE_BUILDING)));
+        menu.put(text.getProperty("menu.requests"), Arrays.asList(
+                actions.get(ActionEnum.REQUEST_LIST_REFRESH), 
+                actions.get(ActionEnum.NEW_REQUEST),
+                actions.get(ActionEnum.EDIT_REQUEST),
+                actions.get(ActionEnum.REQUEST_LIST_ALL)));
         menu.put(text.getProperty("menu.list"), Arrays.asList(
                 actions.get(ActionEnum.USER_LIST), 
                 actions.get(ActionEnum.ROOM_LIST),
                 actions.get(ActionEnum.DEVICE_TYPE_LIST),
-                actions.get(ActionEnum.DEVICE_LIST)));
+                actions.get(ActionEnum.DEVICE_LIST),
+                actions.get(ActionEnum.REQUEST_LIST)));
         menu.put(text.getProperty("menu.new"), Arrays.asList(
                 actions.get(ActionEnum.NEW_USER), 
                 actions.get(ActionEnum.NEW_ROOM),

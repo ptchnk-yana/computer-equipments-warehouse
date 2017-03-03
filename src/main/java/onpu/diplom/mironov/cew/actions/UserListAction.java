@@ -27,7 +27,7 @@ public class UserListAction extends AbstractCewAction {
     public void actionPerformedImpl(ActionEvent e) {
         // We don't check privileges here, because only admin can see this action.
         actions.get(ActionEnum.DELETE).setEnabled(false);
-        tableModel.init(userList());
+        tableModel.init(User.class, userList());
         view.getStatusLabel().setText(getText("user_list.status"));
     }
 

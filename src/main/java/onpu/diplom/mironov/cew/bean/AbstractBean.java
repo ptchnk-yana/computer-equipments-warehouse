@@ -3,7 +3,7 @@ package onpu.diplom.mironov.cew.bean;
 import java.io.Serializable;
 import java.util.Objects;
 
-public abstract class AbstractBean implements Serializable{
+public abstract class AbstractBean implements Serializable {
     protected long id;
 
     public AbstractBean() {
@@ -24,9 +24,7 @@ public abstract class AbstractBean implements Serializable{
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 53 * hash + Objects.hashCode(this.id);
-        return hash;
+        return Objects.hashCode(this.id);
     }
 
     @Override
@@ -34,17 +32,11 @@ public abstract class AbstractBean implements Serializable{
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         final AbstractBean other = (AbstractBean) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.id, other.id);
     }
 
     @Override
