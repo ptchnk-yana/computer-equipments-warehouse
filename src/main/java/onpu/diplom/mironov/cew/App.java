@@ -138,6 +138,7 @@ public class App {
                 appProperties.getProperty("jdbc.url"),
                 appProperties.getProperty("jdbc.username"),
                 appProperties.getProperty("jdbc.password"));
+
         runAutopatcher(ds, "db/patches", appProperties);
         if (createMockData) {
             configService.setOrganization("ОНПУ");
@@ -150,7 +151,7 @@ public class App {
                     throw new IllegalArgumentException(ex);
                 }
             }
-            runAutopatcher(ds, "db/patches/mock", appProperties);
+            runAutopatcher(ds, "db/mock/patches", appProperties);
         }
         DBI dbi = new DBI(ds);
 
@@ -291,7 +292,7 @@ public class App {
     private User authentication(UserDao userDao, Properties text) throws HeadlessException {
         User currentUser = null;
         List<User> users = userDao.list();
-        Map<String, User> userPswds = new HashMap<String, User>();
+        Map<String, User> userPswds = new HashMap<>();
         for (User user : users) {
             userPswds.put(user.getName(), user);
         }
@@ -354,8 +355,7 @@ public class App {
                 organization = JOptionPane.showInputDialog(null,
                         text.getProperty("noOrganization.msg"),
                         text.getProperty("noOrganization.title"),
-                        JOptionPane.INFORMATION_MESSAGE)) {
-        }
+                        JOptionPane.INFORMATION_MESSAGE));
         if (!organization.equals(confService.getOrganization())) {
             confService.setOrganization(organization);
         }

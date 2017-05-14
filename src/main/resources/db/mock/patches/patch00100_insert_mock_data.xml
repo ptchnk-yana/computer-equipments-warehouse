@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+
+    <building ID="1" NAME="ИКС" COMMENT="ИКС - Институт Компьютерных Систем. Ранее известен как ФАВТ - факультет автоматики и вычислительной техники"/>
+    <building ID="2" NAME="Админ" COMMENT="Админ - Административное здание института"/>
+    <building ID="3" NAME="ГУК" COMMENT="ГУК - Главный Учебный Корпус где проходят занятия"/>
+
+    <device_type ID="1" TITLE="Компьютер в сборе" IMAGE_URL="/tmp/computer.png"/>
+    <device_type ID="2" TITLE="Дополнительный монитор" IMAGE_URL="/tmp/monitor.png"/>
+    <device_type ID="3" TITLE="Процессор из кластера" IMAGE_URL="/tmp/processor.png"/>
+    <device_type ID="4" TITLE="Принтер" IMAGE_URL="/tmp/printer.png"/>
+    <device_type ID="5" TITLE="Телефон" IMAGE_URL="/tmp/phone.png"/>
+    <device_type ID="6" TITLE="Проектор" IMAGE_URL="/tmp/projector.png"/>
+
+    <user ID="1" NAME="admin" PASSWORD="admin" PRIVILEGE="ADMIN"/>
+    <user ID="2" NAME="vera.viktorovna" PASSWORD="12345" PRIVILEGE="OPERATOR"/>
+    <user ID="3" NAME="oleg.nikolayevich" PASSWORD="12345" PRIVILEGE="OPERATOR"/>
+    <user ID="4" NAME="viktoriya.mickaylovna" PASSWORD="12345" PRIVILEGE="OPERATOR"/>
+    <user ID="5" NAME="alexandr.anatolievich" PASSWORD="12345" PRIVILEGE="OPERATOR"/>
+    <user ID="6" NAME="svetlana.leonidovna" PASSWORD="12345" PRIVILEGE="OPERATOR"/>
+
+    <room ID="1" USER_ID="2" NUMBER="110" TITLE="Отдел комплектования" BUILDING_ID="1"/>
+    <room ID="2" USER_ID="2" NUMBER="113" TITLE="Отдел научной обработки документов" BUILDING_ID="1"/>
+    <room ID="3" USER_ID="2" NUMBER="112" TITLE="Аудитория" BUILDING_ID="1"/>
+    <room ID="4" USER_ID="2" NUMBER="109" TITLE="Научно методический отдел" BUILDING_ID="1"/>
+    <room ID="5" USER_ID="2" NUMBER="105" TITLE="Аудитория" BUILDING_ID="1"/>
+    <room ID="6" USER_ID="4" NUMBER="107" TITLE="Аудитория" BUILDING_ID="1"/>
+    <room ID="7" USER_ID="4" NUMBER="106" TITLE="Сектор интернет технологий" BUILDING_ID="1"/>
+    <room ID="8" USER_ID="4" NUMBER="103" TITLE="Директор" BUILDING_ID="1"/>
+
+    <room ID="9" USER_ID="2" NUMBER="102" TITLE="Лаборатория информационных технологий" BUILDING_ID="2"/>
+    <room ID="10" USER_ID="3" NUMBER="209" TITLE="Базы данных" BUILDING_ID="2"/>
+    <room ID="11" USER_ID="3" NUMBER="210" TITLE="Хранилище" BUILDING_ID="2"/>
+    <room ID="12" USER_ID="3" NUMBER="204" TITLE="Аудитория амфитеатр" BUILDING_ID="2"/>
+    <room ID="13" USER_ID="3" NUMBER="205" TITLE="Абонимент студентов" BUILDING_ID="2"/>
+    <room ID="14" USER_ID="3" NUMBER="202" TITLE="Читальный зал" BUILDING_ID="2"/>
+    <room ID="15" USER_ID="4" NUMBER="203" TITLE="Электронный Читальный зал" BUILDING_ID="2"/>
+    <room ID="16" USER_ID="5" NUMBER="303" TITLE="Отдел студенческих работ" BUILDING_ID="2"/>
+    <room ID="17" USER_ID="6" NUMBER="401" TITLE="Центр последипломного образования" BUILDING_ID="2"/>
+    <room ID="18" USER_ID="6" NUMBER="404" TITLE="Отдел хранения файлов" BUILDING_ID="2"/>
+
+    <room ID="19" USER_ID="2" NUMBER="101" TITLE="Аудитория" BUILDING_ID="3"/>
+    <room ID="20" USER_ID="2" NUMBER="108" TITLE="Аудитория" BUILDING_ID="3"/>
+    <room ID="21" USER_ID="3" NUMBER="116" TITLE="Информационно библиографический отдел" BUILDING_ID="3"/>
+    <room ID="22" USER_ID="5" NUMBER="302" TITLE="Социально-гуманитарный зал" BUILDING_ID="3"/>
+    <room ID="23" USER_ID="5" NUMBER="301" TITLE="Иностранный зал" BUILDING_ID="3"/>
+    <room ID="24" USER_ID="6" NUMBER="402" TITLE="Обслуживание студентов заочной формы обучения" BUILDING_ID="3"/>
+    <room ID="25" USER_ID="6" NUMBER="403" TITLE="Техническая лаборатория" BUILDING_ID="3"/>
+
+    <device ID="1" ROOM_ID="2" DEVICE_TYPE_ID="1" HASH="-1367336112" DESCRIPTION="Компьютер в сборе для 113"/>
+    <device ID="2" ROOM_ID="2" DEVICE_TYPE_ID="3" HASH="-455078677" DESCRIPTION="Процессор из кластера для 113"/>
+    <device ID="3" ROOM_ID="2" DEVICE_TYPE_ID="4" HASH="1258528844" DESCRIPTION="Принтер для 113"/>
+    <device ID="4" ROOM_ID="2" DEVICE_TYPE_ID="4" HASH="2135555059" DESCRIPTION="Принтер для 113"/>
+    <device ID="5" ROOM_ID="3" DEVICE_TYPE_ID="2" HASH="1886133837" DESCRIPTION="Дополнительный монитор для 112"/>
+    <device ID="6" ROOM_ID="3" DEVICE_TYPE_ID="1" HASH="-2038361974" DESCRIPTION="Компьютер в сборе для 112"/>
+    <device ID="7" ROOM_ID="3" DEVICE_TYPE_ID="4" HASH="416979075" DESCRIPTION="Принтер для 112"/>
+    <device ID="8" ROOM_ID="3" DEVICE_TYPE_ID="5" HASH="-575621617" DESCRIPTION="Телефон для 112"/>
+    <device ID="9" ROOM_ID="4" DEVICE_TYPE_ID="4" HASH="431520513" DESCRIPTION="Принтер для 109"/>
+    <device ID="10" ROOM_ID="4" DEVICE_TYPE_ID="3" HASH="-1746910162" DESCRIPTION="Процессор из кластера для 109"/>
+    <device ID="11" ROOM_ID="4" DEVICE_TYPE_ID="3" HASH="-998845115" DESCRIPTION="Процессор из кластера для 109"/>
+    <device ID="12" ROOM_ID="4" DEVICE_TYPE_ID="2" HASH="536765672" DESCRIPTION="Дополнительный монитор для 109"/>
+    <device ID="13" ROOM_ID="4" DEVICE_TYPE_ID="5" HASH="149940396" DESCRIPTION="Телефон для 109"/>
+    <device ID="14" ROOM_ID="5" DEVICE_TYPE_ID="1" HASH="-703522357" DESCRIPTION="Компьютер в сборе для 105"/>
+    <device ID="15" ROOM_ID="5" DEVICE_TYPE_ID="3" HASH="1788017275" DESCRIPTION="Процессор из кластера для 105"/>
+    <device ID="16" ROOM_ID="5" DEVICE_TYPE_ID="1" HASH="1399149342" DESCRIPTION="Компьютер в сборе для 105"/>
+    <device ID="17" ROOM_ID="5" DEVICE_TYPE_ID="1" HASH="-1918165650" DESCRIPTION="Компьютер в сборе для 105"/>
+    <device ID="18" ROOM_ID="6" DEVICE_TYPE_ID="3" HASH="1287391269" DESCRIPTION="Процессор из кластера для 107"/>
+    <device ID="19" ROOM_ID="6" DEVICE_TYPE_ID="4" HASH="-2079392050" DESCRIPTION="Принтер для 107"/>
+    <device ID="20" ROOM_ID="6" DEVICE_TYPE_ID="3" HASH="2041522487" DESCRIPTION="Процессор из кластера для 107"/>
+    <device ID="21" ROOM_ID="7" DEVICE_TYPE_ID="5" HASH="-997843823" DESCRIPTION="Телефон для 106"/>
+    <device ID="22" ROOM_ID="7" DEVICE_TYPE_ID="5" HASH="649123009" DESCRIPTION="Телефон для 106"/>
+    <device ID="23" ROOM_ID="9" DEVICE_TYPE_ID="1" HASH="-1365851953" DESCRIPTION="Компьютер в сборе для 102"/>
+    <device ID="24" ROOM_ID="9" DEVICE_TYPE_ID="1" HASH="-1123027747" DESCRIPTION="Компьютер в сборе для 102"/>
+    <device ID="25" ROOM_ID="10" DEVICE_TYPE_ID="5" HASH="1943922316" DESCRIPTION="Телефон для 209"/>
+    <device ID="26" ROOM_ID="10" DEVICE_TYPE_ID="4" HASH="1479432136" DESCRIPTION="Принтер для 209"/>
+    <device ID="27" ROOM_ID="10" DEVICE_TYPE_ID="1" HASH="-1210092151" DESCRIPTION="Компьютер в сборе для 209"/>
+    <device ID="28" ROOM_ID="10" DEVICE_TYPE_ID="5" HASH="215382232" DESCRIPTION="Телефон для 209"/>
+    <device ID="29" ROOM_ID="10" DEVICE_TYPE_ID="4" HASH="1902561061" DESCRIPTION="Принтер для 209"/>
+    <device ID="30" ROOM_ID="11" DEVICE_TYPE_ID="5" HASH="1591141862" DESCRIPTION="Телефон для 210"/>
+    <device ID="31" ROOM_ID="11" DEVICE_TYPE_ID="1" HASH="-104605250" DESCRIPTION="Компьютер в сборе для 210"/>
+    <device ID="32" ROOM_ID="11" DEVICE_TYPE_ID="4" HASH="996207213" DESCRIPTION="Принтер для 210"/>
+    <device ID="33" ROOM_ID="11" DEVICE_TYPE_ID="3" HASH="-1536013902" DESCRIPTION="Процессор из кластера для 210"/>
+    <device ID="34" ROOM_ID="12" DEVICE_TYPE_ID="1" HASH="1335629666" DESCRIPTION="Компьютер в сборе для 204"/>
+    <device ID="35" ROOM_ID="12" DEVICE_TYPE_ID="3" HASH="444095875" DESCRIPTION="Процессор из кластера для 204"/>
+    <device ID="36" ROOM_ID="12" DEVICE_TYPE_ID="4" HASH="723976342" DESCRIPTION="Принтер для 204"/>
+    <device ID="37" ROOM_ID="12" DEVICE_TYPE_ID="2" HASH="-94273830" DESCRIPTION="Дополнительный монитор для 204"/>
+    <device ID="38" ROOM_ID="13" DEVICE_TYPE_ID="1" HASH="1525604468" DESCRIPTION="Компьютер в сборе для 205"/>
+    <device ID="39" ROOM_ID="14" DEVICE_TYPE_ID="1" HASH="-776666358" DESCRIPTION="Компьютер в сборе для 202"/>
+    <device ID="40" ROOM_ID="14" DEVICE_TYPE_ID="5" HASH="-64630384" DESCRIPTION="Телефон для 202"/>
+    <device ID="41" ROOM_ID="14" DEVICE_TYPE_ID="4" HASH="-95719789" DESCRIPTION="Принтер для 202"/>
+    <device ID="42" ROOM_ID="14" DEVICE_TYPE_ID="1" HASH="1595644902" DESCRIPTION="Компьютер в сборе для 202"/>
+    <device ID="43" ROOM_ID="14" DEVICE_TYPE_ID="3" HASH="1243720602" DESCRIPTION="Процессор из кластера для 202"/>
+    <device ID="44" ROOM_ID="15" DEVICE_TYPE_ID="2" HASH="202863291" DESCRIPTION="Дополнительный монитор для 203"/>
+    <device ID="45" ROOM_ID="15" DEVICE_TYPE_ID="4" HASH="-218498568" DESCRIPTION="Принтер для 203"/>
+    <device ID="46" ROOM_ID="15" DEVICE_TYPE_ID="2" HASH="-2064688456" DESCRIPTION="Дополнительный монитор для 203"/>
+    <device ID="47" ROOM_ID="15" DEVICE_TYPE_ID="5" HASH="1622282933" DESCRIPTION="Телефон для 203"/>
+    <device ID="48" ROOM_ID="17" DEVICE_TYPE_ID="4" HASH="1946317144" DESCRIPTION="Принтер для 401"/>
+    <device ID="49" ROOM_ID="17" DEVICE_TYPE_ID="1" HASH="1928213565" DESCRIPTION="Компьютер в сборе для 401"/>
+    <device ID="50" ROOM_ID="18" DEVICE_TYPE_ID="5" HASH="-646310528" DESCRIPTION="Телефон для 404"/>
+    <device ID="51" ROOM_ID="18" DEVICE_TYPE_ID="5" HASH="-698692769" DESCRIPTION="Телефон для 404"/>
+    <device ID="52" ROOM_ID="19" DEVICE_TYPE_ID="5" HASH="1505713393" DESCRIPTION="Телефон для 101"/>
+    <device ID="53" ROOM_ID="20" DEVICE_TYPE_ID="5" HASH="1316197290" DESCRIPTION="Телефон для 108"/>
+    <device ID="54" ROOM_ID="20" DEVICE_TYPE_ID="3" HASH="1983663540" DESCRIPTION="Процессор из кластера для 108"/>
+    <device ID="55" ROOM_ID="20" DEVICE_TYPE_ID="4" HASH="652085155" DESCRIPTION="Принтер для 108"/>
+    <device ID="56" ROOM_ID="21" DEVICE_TYPE_ID="5" HASH="-489040400" DESCRIPTION="Телефон для 116"/>
+    <device ID="57" ROOM_ID="21" DEVICE_TYPE_ID="4" HASH="1920433525" DESCRIPTION="Принтер для 116"/>
+    <device ID="58" ROOM_ID="21" DEVICE_TYPE_ID="5" HASH="-284014" DESCRIPTION="Телефон для 116"/>
+    <device ID="59" ROOM_ID="21" DEVICE_TYPE_ID="2" HASH="-611993439" DESCRIPTION="Дополнительный монитор для 116"/>
+    <device ID="60" ROOM_ID="21" DEVICE_TYPE_ID="4" HASH="-1462732552" DESCRIPTION="Принтер для 116"/>
+    <device ID="61" ROOM_ID="22" DEVICE_TYPE_ID="4" HASH="-251008738" DESCRIPTION="Принтер для 302"/>
+    <device ID="62" ROOM_ID="22" DEVICE_TYPE_ID="1" HASH="-1024199160" DESCRIPTION="Компьютер в сборе для 302"/>
+    <device ID="63" ROOM_ID="22" DEVICE_TYPE_ID="1" HASH="334214931" DESCRIPTION="Компьютер в сборе для 302"/>
+    <device ID="64" ROOM_ID="24" DEVICE_TYPE_ID="5" HASH="-2087449126" DESCRIPTION="Телефон для 402"/>
+    <device ID="65" ROOM_ID="24" DEVICE_TYPE_ID="1" HASH="33140704" DESCRIPTION="Компьютер в сборе для 402"/>
+    <device ID="66" ROOM_ID="24" DEVICE_TYPE_ID="4" HASH="1531317814" DESCRIPTION="Принтер для 402"/>
+    <device ID="67" ROOM_ID="24" DEVICE_TYPE_ID="1" HASH="1689046975" DESCRIPTION="Компьютер в сборе для 402"/>
+    <device ID="68" ROOM_ID="25" DEVICE_TYPE_ID="5" HASH="-1707802978" DESCRIPTION="Телефон для 403"/>
+    <device ID="69" ROOM_ID="25" DEVICE_TYPE_ID="3" HASH="-1159346571" DESCRIPTION="Процессор из кластера для 403"/>
+    <device ID="70" ROOM_ID="25" DEVICE_TYPE_ID="2" HASH="-842270845" DESCRIPTION="Дополнительный монитор для 403"/>
+
+    <request ID="1" USER_ID="2" TITLE="Добовление оборудования в 303" DESCRIPTION="В аудиторию №303 был добавлен новый компьютер, которого еще нет в нашей базе. Его необходимо зарегистрировать.\n\tСистемный блок: Intel(R) Core(TM) i5-4690K CPU @ 3.50GHz" STATUS="OPEN"/>
+    <request ID="2" USER_ID="3" TITLE="Изменение оборудования в 402" DESCRIPTION="В аудиторию №402 поменяли монитор на более новый. Это необходимо отобразить в базе.\n   DELL U2412M (DEP-0): X screen 0" STATUS="OPEN"/>
+</dataset>
