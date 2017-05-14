@@ -12,6 +12,8 @@ public enum ActionEnum {
     NEW_DEVICE_TYPE(UserPrivilege.ADMIN),
     NEW_DEVICE,
     NEW_BUILDING(UserPrivilege.ADMIN),
+    NEW_REQUEST,
+    EDIT_REQUEST(UserPrivilege.ADMIN),
     DELETE,
     DELETE_BUILDING(UserPrivilege.ADMIN),
 
@@ -19,6 +21,9 @@ public enum ActionEnum {
     ROOM_LIST,
     DEVICE_TYPE_LIST,
     DEVICE_LIST,
+    REQUEST_LIST,
+    REQUEST_LIST_ALL,
+    REQUEST_LIST_REFRESH,
     BUILDING_LIST_REFRESH,
 
     WHO_AM_I,

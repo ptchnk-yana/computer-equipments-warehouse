@@ -3,6 +3,7 @@ package onpu.diplom.mironov.cew.actions;
 import java.awt.event.ActionEvent;
 import java.util.Map;
 import java.util.Properties;
+import onpu.diplom.mironov.cew.bean.DeviceType;
 import onpu.diplom.mironov.cew.bean.User;
 import onpu.diplom.mironov.cew.dao.DeviceTypeDao;
 import onpu.diplom.mironov.cew.model.MainTableModel;
@@ -25,7 +26,7 @@ public class DeviceTypeListAction extends AbstractCewAction {
     @Override
     public void actionPerformedImpl(ActionEvent e) {
         actions.get(ActionEnum.DELETE).setEnabled(false);
-        tableModel.init(deviceTypeDao.list());
+        tableModel.init(DeviceType.class, deviceTypeDao.list());
         view.getStatusLabel().setText(getText("device_type_list.status"));
     }
     

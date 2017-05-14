@@ -85,6 +85,10 @@ public class NewRoomPanel extends javax.swing.JPanel {
                     .addComponent(userComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jLabel1.getAccessibleContext().setAccessibleName(bundle.getString("panel.newroom.number.label")); // NOI18N
+        jLabel2.getAccessibleContext().setAccessibleName(bundle.getString("panel.newroom.title.label")); // NOI18N
+        jLabel3.getAccessibleContext().setAccessibleName(bundle.getString("panel.newroom.user.label")); // NOI18N
     }// </editor-fold>//GEN-END:initComponents
 
 

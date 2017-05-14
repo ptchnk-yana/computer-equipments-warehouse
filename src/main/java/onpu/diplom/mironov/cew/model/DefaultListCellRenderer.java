@@ -19,6 +19,7 @@ public class DefaultListCellRenderer<T> extends JLabel implements ListCellRender
 
         setText(getText(value));
         setIcon(getIcon(value));
+        setToolTipText(getToolTipText(value));
 
         Color background;
         Color foreground;
@@ -41,7 +42,7 @@ public class DefaultListCellRenderer<T> extends JLabel implements ListCellRender
         } else {
             background = Color.WHITE;
             foreground = Color.BLACK;
-        };
+        }
 
         setBackground(background);
         setForeground(foreground);
@@ -55,5 +56,9 @@ public class DefaultListCellRenderer<T> extends JLabel implements ListCellRender
 
     protected Icon getIcon(T value) {
         return null;
+    }
+
+    protected String getToolTipText(T value) {
+        return getToolTipText();
     }
 }
